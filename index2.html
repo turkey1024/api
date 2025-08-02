@@ -24,12 +24,12 @@
         }
         
         function fetchUserImage() {
-            userImageElement.innerHTML = '<p>正在加载用户图片...</p>';
+            userImageElement.innerHTML = '<p></p>';
             
             fetch('https://randomuser.me/api/')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('网络响应不正常');
+                        throw new Error('error');
                     }
                     return response.json();
                 })
