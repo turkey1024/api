@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random API</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0; /* 可选：背景色 */
+        }
+        #userImage {
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #userImage img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* 保持比例，不拉伸 */
+        }
+    </style>
+</head>
+<body>
+    <div id="userImage">
+        <p></p>
+    </div>
+
+    <script>
+        let refreshInterval;
+        const userImageElement = document.getElementById('userImage');
+        
+        window.onload = function() {
+            startAutoRefresh();
+        };
+        
+        function startAutoRefresh() {
+            fetchUserImage();
+            refreshInterval = setInterval(fetchUserImage, 3000);
+        }
+        
+        function fetchUserImage() {
+            userImageElement.innerHTML = '<p></p>';
+            
+            fetch('https://randomuser.me/api/')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('error');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const user = data.results[0];
+                    userImageElement.innerHTML = `
+                        <img src="${user.picture.large}" alt="随机用户">
+                    `;
+                })
+                .catch(error => {
+                    userImageElement.innerHTML = `<p style="color: red;">加载失败: ${error.message}</p>`;
+                    setTimeout(fetchUserImage, 3000);
+                });
+        }
+    </script>
+</body>
+</html>
+
